@@ -46,8 +46,10 @@ def get_pdf_url(scihub_url):
         str: The URL of the PDF or None if not found.
     """
     try:
+        logging.info(f"Requesting Sci-Hub page: {scihub_url}")
         response = requests.get(scihub_url)
         response.raise_for_status()
+        logging.info(f"Received response from Sci-Hub: {response.status_code}")
         soup = BeautifulSoup(response.content, 'html.parser')
         iframe = soup.find('iframe')
         return iframe['src'] if iframe else None
@@ -64,8 +66,10 @@ def download_pdf(pdf_url, save_path):
         save_path (str): The path to save the downloaded PDF.
     """
     try:
+        logging.info(f"Requesting PDF: {pdf_url}")
         response = requests.get(pdf_url)
         response.raise_for_status()
+        logging.info(f"Received response for PDF: {response.status_code}")
         with open(save_path, 'wb') as f:
             f.write(response.content)
         logging.info(f"Downloaded PDF to {save_path}")
