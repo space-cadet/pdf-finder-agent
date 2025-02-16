@@ -22,6 +22,35 @@ def extract_doi(url):
     match = re.search(doi_pattern, url)
     return match.group(0) if match else None
 
+def search_doi_by_title(title):
+    """
+    Search for a DOI using the paper title via the CrossRef API.
+    
+    Args:
+        title (str): The title of the paper.
+    
+    Returns:
+        str: The found DOI or None if not found.
+    """
+    try:
+        logging.info(f"Searching DOI for title: {title}")
+        url = "https://api.crossref.org/works"
+        params = {"query.title": title, "rows": 1}
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        data = response.json()
+        items = data.get("message", {}).get("items", [])
+        if items:
+            doi = items[0].get("DOI")
+            logging.info(f"Found DOI for title '{title}': {doi}")
+            return doi
+        else:
+            logging.warning(f"No DOI found for title: {title}")
+            return None
+    except requests.RequestException as e:
+        logging.error(f"Failed to search DOI by title: {e}")
+        return None
+
 def build_scihub_url(doi):
     """
     Build the Sci-Hub URL for a given DOI.
@@ -94,12 +123,15 @@ def download_papers(paper_list, output_dir):
     Download papers from a list of DOIs or URLs and save them to the specified directory.
     
     Args:
-        paper_list (list): A list of DOIs or URLs.
+        paper_list (list): A list of DOIs, URLs, or paper titles.
         output_dir (str): The directory to save the downloaded PDFs.
     """
     os.makedirs(output_dir, exist_ok=True)
     for paper in paper_list:
         doi = extract_doi(paper) if 'http' in paper else paper
+        if not doi:
+            logging.info(f"Attempting to search DOI for title: {paper}")
+            doi = search_doi_by_title(paper)
         if not doi:
             logging.warning(f"Skipping invalid input: {paper}")
             continue
