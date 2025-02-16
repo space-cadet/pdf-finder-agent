@@ -128,7 +128,9 @@ def download_papers(paper_list, output_dir):
     """
     os.makedirs(output_dir, exist_ok=True)
     for paper in paper_list:
-        doi = extract_doi(paper) if 'http' in paper else paper
+        doi = extract_doi(paper) if 'http' in paper else None
+        if not doi:
+            doi = extract_doi(paper)
         if not doi:
             logging.info(f"Attempting to search DOI for title: {paper}")
             doi = search_doi_by_title(paper)
