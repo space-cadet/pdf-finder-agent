@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import re
 import os
 import logging
+from urllib.parse import urljoin
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -56,8 +57,9 @@ def get_pdf_url(scihub_url):
         
         if embed:
             pdf_url = embed.get('src')
-            logging.info(f"Found PDF URL in embed: {pdf_url}")
-            return pdf_url
+            absolute_pdf_url = urljoin(scihub_url, pdf_url)
+            logging.info(f"Found PDF URL in embed: {absolute_pdf_url}")
+            return absolute_pdf_url
         else:
             logging.warning("No embed found on the Sci-Hub page.")
             logging.debug(f"Sci-Hub page content: {soup.prettify()}")
