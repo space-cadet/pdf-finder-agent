@@ -50,9 +50,18 @@ def get_pdf_url(scihub_url):
         response = requests.get(scihub_url)
         response.raise_for_status()
         logging.info(f"Received response from Sci-Hub: {response.status_code}")
+        
         soup = BeautifulSoup(response.content, 'html.parser')
         iframe = soup.find('iframe')
-        return iframe['src'] if iframe else None
+        
+        if iframe:
+            pdf_url = iframe.get('src')
+            logging.info(f"Found PDF URL in iframe: {pdf_url}")
+            return pdf_url
+        else:
+            logging.warning("No iframe found on the Sci-Hub page.")
+            logging.debug(f"Sci-Hub page content: {soup.prettify()}")
+            return None
     except requests.RequestException as e:
         logging.error(f"Failed to get PDF URL from Sci-Hub: {e}")
         return None
