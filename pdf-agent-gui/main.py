@@ -3,7 +3,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
-from pdf_agent_gui.pdf_agent import download_papers
+from pdf_agent import download_papers
 
 class PDFAgentGUI(BoxLayout):
     def __init__(self, **kwargs):
