@@ -1,0 +1,37 @@
+<Window>:
+    title: "PDF Agent"
+    size_hint: (0.8, 0.8)
+    auto_scale: True
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 10
+        spacing: 10
+
+        Label:
+            text: "PDF Agent"
+            font_size: 24
+            size_hint_y: None
+            height: 40
+
+        TextInput:
+            id: paper_input
+            hint_text: "Enter DOI, URL, or paper title"
+            multiline: False
+
+        Button:
+            text: "Download PDF"
+            on_press: app.download_pdf(paper_input.text)
+
+        Label:
+            id: status_label
+            text: "Status: Waiting for input..."
+            size_hint_y: None
+            height: 30
+
+        ScrollView:
+            Label:
+                id: output_label
+                text: ""
+                size_hint_y: None
+                height: self.texture_size[1]
