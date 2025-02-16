@@ -135,10 +135,13 @@ def download_papers(paper_list, output_dir):
         if not doi:
             logging.warning(f"Skipping invalid input: {paper}")
             continue
+        save_path = os.path.join(output_dir, f"{doi.replace('/', '_')}.pdf")
+        if os.path.exists(save_path):
+            logging.info(f"PDF already exists at {save_path}, skipping download.")
+            continue
         scihub_url = build_scihub_url(doi)
         pdf_url = get_pdf_url(scihub_url)
         if pdf_url:
-            save_path = os.path.join(output_dir, f"{doi.replace('/', '_')}.pdf")
             download_pdf(pdf_url, save_path)
         else:
             logging.warning(f"Failed to find PDF for: {doi}")
