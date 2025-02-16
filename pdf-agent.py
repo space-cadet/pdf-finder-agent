@@ -151,8 +151,9 @@ def download_papers(paper_list, output_dir):
 # Example usage
 if __name__ == "__main__":
     papers = [
-        "10.1038/nature12373",
-        "https://doi.org/10.1016/j.cell.2020.01.001",
-        "Deep learning for molecular design"
+        "Superspace and the Nature of Quantum Geometrodynamics",
+        "On the Extra Current",
+        "On Cauchy's Problem in General Relativity - II",
+        "Finite-Velocity Diffusion"
     ]
     download_papers(papers, "downloaded_papers")
